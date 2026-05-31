@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "src/ui/src/**"
+      - "src/ui/**"
       #- ".github/workflows/build-push-ui.yaml" # During testing phases only for prod comment this line
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: retail-store/ui
+  ECR_REPOSITORY: linkshrink
 
 jobs:
   build-and-push-ui:
@@ -26,7 +26,7 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::180789647333:role/github-actions-oidc-role-ui3
+          role-to-assume: arn:aws:iam::311902596413:role/github-actions-oidc-role
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
