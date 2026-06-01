@@ -16,6 +16,10 @@ env:
   ECR_REPOSITORY: linkshrink
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+concurrency:
+  group: gitops-push
+  cancel-in-progress: false
+
 jobs:
   build-and-push-ui:
     runs-on: ubuntu-latest
