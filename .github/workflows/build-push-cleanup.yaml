@@ -63,5 +63,6 @@ jobs:
           git diff --quiet || (
             git add chart/values-cleanup.yaml
             git commit -m "Update Cleanup Worker image tag to sha-${GITHUB_SHA::7}"
+            git pull --rebase origin main
             git push origin main
           )
