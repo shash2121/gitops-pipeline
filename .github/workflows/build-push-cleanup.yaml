@@ -1,22 +1,21 @@
-name: Build and Push UI Service to ECR
+name: Build and Push Cleanup Worker to ECR
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - "services/ui/**"
-      #- ".github/workflows/build-push-ui.yaml" # During testing phases only for prod comment this line
+      - "services/cleanup-worker/**"
 
 permissions:
-  id-token: write # Needed for OIDC
-  contents: write # Needed to push commits
+  id-token: write
+  contents: write
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: linkshrink
+  ECR_REPOSITORY: linkshrink-cleanup
 
 jobs:
-  build-and-push-ui:
+  build-and-push-cleanup:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,16 +39,13 @@ jobs:
           IMAGE_BASE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}"
           echo "IMAGE_BASE=$IMAGE_BASE" >> $GITHUB_ENV
           echo "TAGS=latest $SHA_TAG" >> $GITHUB_ENV
-          echo "Using tags: latest and $SHA_TAG"
-          echo "latest = convenience tag for testing"
-          echo "$SHA_TAG = immutable tag used in Helm values"
 
       - name: Build and push Docker images
         run: |
           for tag in $TAGS; do
             IMAGE_URI="$IMAGE_BASE:$tag"
             echo "Building and pushing $IMAGE_URI"
-            docker build -t $IMAGE_URI services/ui
+            docker build -t $IMAGE_URI services/cleanup-worker
             docker push $IMAGE_URI
           done
 
@@ -61,17 +57,10 @@ jobs:
 
       - name: Update Helm values file with new image tag
         run: |
-          cd services/ui
-          git config user.name "ci-bot"
-          git config user.email "ci-bot@stacksimplify.com"
-          sed -i "s|^  tag: .*|  tag: sha-${GITHUB_SHA::7}|" chart/values-ui.yaml
+          cd services/cleanup-worker
+          sed -i "s|^  tag: .*|  tag: sha-${GITHUB_SHA::7}|" chart/values-cleanup.yaml
           git diff --quiet || (
-            git add chart/values-ui.yaml
-            git commit -m "Update UI image tag to sha-${GITHUB_SHA::7}"
+            git add chart/values-cleanup.yaml
+            git commit -m "Update Cleanup Worker image tag to sha-${GITHUB_SHA::7}"
             git push origin main
           )
-
-      - name: CI Complete
-        run: |
-          echo "Image push and Git update done"
-          echo "Tags used: $TAGS"
