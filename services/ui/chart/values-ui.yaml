@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: 311902596413.dkr.ecr.us-east-1.amazonaws.com/linkshrink
-  tag: sha-4e3d933
+  tag: sha-f0cc45a
   pullPolicy: Always
 
 service:
