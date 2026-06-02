@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: 311902596413.dkr.ecr.us-east-1.amazonaws.com/linkshrink-auth
+  tag: sha-0000000
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3001
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"

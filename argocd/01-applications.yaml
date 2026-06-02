@@ -1,0 +1,109 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkshrink-frontend
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shash2121/gitops-pipeline.git
+    targetRevision: main
+    path: services/ui/chart
+    helm:
+      valueFiles:
+        - values-ui.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkshrink-auth
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shash2121/gitops-pipeline.git
+    targetRevision: main
+    path: services/auth-service/chart
+    helm:
+      valueFiles:
+        - values-auth.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkshrink-url
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shash2121/gitops-pipeline.git
+    targetRevision: main
+    path: services/url-service/chart
+    helm:
+      valueFiles:
+        - values-url.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkshrink-analytics
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shash2121/gitops-pipeline.git
+    targetRevision: main
+    path: services/analytics-service/chart
+    helm:
+      valueFiles:
+        - values-analytics.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkshrink-cleanup
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/shash2121/gitops-pipeline.git
+    targetRevision: main
+    path: services/cleanup-worker/chart
+    helm:
+      valueFiles:
+        - values-cleanup.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
